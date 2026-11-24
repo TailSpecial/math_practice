@@ -1,0 +1,24 @@
+{% load static %}<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{% block title %}Практика · ФМиКН{% endblock %}</title><link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml"><link rel="stylesheet" href="{% static 'app.css' %}"><link rel="stylesheet" href="{% static 'vendor/katex/katex.min.css' %}"><link rel="stylesheet" href="{% static 'math.css' %}"><script src="{% static 'vendor/katex/katex.min.js' %}" defer></script><script src="{% static 'vendor/katex/auto-render.min.js' %}" defer></script><script src="{% static 'math.js' %}" defer></script><script src="{% static 'app.js' %}" defer></script></head>
+<body>
+{% if user.is_authenticated %}
+<aside class="sidebar">
+ <a href="/" class="brand"><span class="brand-mark">π</span><span>практика<span class="brand-sub">КубГУ · ФМиКН</span></span></a>
+ <div class="nav-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+ <nav aria-label="Основная навигация">
+ <a href="/" class="{% if request.path == '/' %}active{% endif %}"><span>◫</span>{% if portal_profile.role == 'student' %}Моя практика{% else %}Студенты{% endif %}</a>
+ {% if can_oversee %}<a href="{% url 'groups' %}" class="{% if '/groups/' in request.path %}active{% endif %}"><span>▦</span>Группы и задания</a><a href="{% url 'bank' %}" class="{% if '/bank/' in request.path %}active{% endif %}"><span>≡</span>Банк задач</a>{% endif %}
+ {% if can_manage %}<a href="{% url 'teachers' %}" class="{% if '/teachers/' in request.path %}active{% endif %}"><span>♙</span>Преподаватели</a><a href="{% url 'assignment_template' %}" class="{% if '/assignment-template/' in request.path %}active{% endif %}"><span>▤</span>Бланк задания</a>{% endif %}
+ <a href="{% url 'materials' %}" class="{% if '/materials/' in request.path %}active{% endif %}"><span>▱</span>Материалы</a>
+ </nav>
+ <div class="sidebar-note"><span class="small-dot"></span>Учебная практика<span>Математика начинается<br>с самостоятельного поиска.</span></div>
+ <div class="user-card"><div class="avatar">{{ portal_profile.full_name|first }}</div><div><strong>{{ portal_profile.full_name|truncatechars:24 }}</strong><small>{{ portal_profile.get_role_display }}</small></div></div>
+ <form method="post" action="{% url 'logout' %}" class="logout">{% csrf_token %}<button>Выйти из аккаунта ↗</button></form>
+</aside>
+{% endif %}
+<div class="{% if user.is_authenticated %}workspace{% else %}auth-workspace{% endif %}">
+{% if user.is_authenticated %}<header class="topbar"><span>Факультет математики и компьютерных наук</span><span class="top-meta">{{ portal_profile.department }} <span class="small-dot"></span> Личный кабинет</span></header>{% endif %}
+<main>{% for message in messages %}<div role="status" class="notice {{ message.tags }}">{{ message }}</div>{% endfor %}{% block content %}{% endblock %}</main>
+<footer>Кубанский государственный университет <span>Электронный комплекс учебной практики</span></footer>
+</div>
+</body></html>

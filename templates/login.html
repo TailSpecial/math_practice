@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% block content %}
+<div class="login-layout"><section class="login-story"><a class="brand" href="/login/"><span class="brand-mark">π</span><span>практика<span class="brand-sub">КубГУ · ФМиКН</span></span></a><div class="eyebrow">ОТ ТЕОРИИ К ИССЛЕДОВАНИЮ</div><h1>Большие открытия<br>начинаются<br>с вашей практики<span>.</span></h1><p>Задания, материалы и отчёты —<br>в одном пространстве факультета.</p><div class="math-art" aria-hidden="true">∫ <span>f(x) dx</span> <small>∞<br>∑ &nbsp; ∂</small></div><small>Факультет математики и компьютерных наук</small></section>
+<section class="login-panel"><div class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</div><h2>Добро пожаловать</h2><p class="muted">Войдите, чтобы продолжить работу с практикой.</p>
+{% if sso_enabled %}<a class="button primary full" href="{% url 'kubsu_login' %}">Войти через аккаунт КубГУ ↗</a><div class="divider">или по локальному аккаунту</div>{% else %}<div class="notice info">Университетский вход пока не подключён. Для локальной работы используйте выданный аккаунт.</div>{% endif %}
+<form method="post" class="stack">{% csrf_token %}{{ form.as_p }}{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}<button class="button primary full">Войти →</button></form>
+<p class="help">Нет доступа? Обратитесь к заведующему кафедрой.<br>Самостоятельная регистрация не требуется.</p></section></div>
+{% endblock %}
